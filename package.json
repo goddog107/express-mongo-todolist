@@ -1,0 +1,27 @@
+{
+  "name": "todolist",
+  "version": "1.0.0",
+  "description": "Todo list test task",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tonyalex107/express-todolist.git"
+  },
+  "keywords": [
+    "todolist",
+    "node",
+    "express"
+  ],
+  "author": "David Harlamov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tonyalex107/express-todolist/issues"
+  },
+  "homepage": "https://github.com/tonyalex107/express-todolist#readme",
+  "dependencies": {
+    "express": "^4.16.3"
+  }
+}
