@@ -3,7 +3,7 @@ extends layout.pug
 block content
   h1 Todo list
   hr
-  
+
   if todos.length > 0
     div.todos-container
       table(class="table")
@@ -21,8 +21,3 @@ block content
     a(class='btn btn-primary', href='todo-create')
       i(class='fa fa-plus')
       span  New Todo
-
-block append foot
-  script.
-    console.log('ok')
-    pets = []

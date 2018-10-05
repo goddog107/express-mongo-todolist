@@ -1,10 +1,44 @@
 tr(class='todo-item')
-  td
-    <input type="checkbox" checked><span></span></label>
-  td= todo.human_date
-  td= todo.description
-  td
-    a(class='btn btn-sm')
+  td(width=10)
+    label
+      input.check-large(id="doneCheck-" + todo._id, type="checkbox", checked=todo.done, data-id=todo._id, onchange='check("' + todo._id + '")')
+      span
+  if todo.done
+    td.todo-cell.completed(width=120)= todo.human_date
+    td.todo-cell.completed= todo.description
+  else
+    td.todo-cell(width=120)= todo.human_date
+    td.todo-cell= todo.description
+  td(width=80)
+    a(class='btn btn-sm', href='/todos/' + todo._id)
       i(class='fa fa-pencil')
-    a(class='btn btn-sm')
+    a(class='btn btn-sm', onclick='deleteTodo("' + todo._id + '")')
       i(class='fa fa-trash-o')
+
+script.
+  var deleteTodo = function(id) {
+    if(confirm('Are you sure to delete this item?')) {
+      window.location.href = '/todo-delete/' + id;
+    }
+  }
+
+  function check(id, done) {
+    done = $('#doneCheck-' + id)[0].checked;
+    console.log('check', id, done);
+    var tr = $('#doneCheck-' + id).parent().parent().parent();
+    if(done) {
+      tr.find('.todo-cell').addClass('completed');
+    } else {
+      tr.find('.todo-cell').removeClass('completed');
+    }
+
+    $.ajax({
+      url: '/todo-toggle/' + id + '/' + done,
+      method: 'GET',
+      success: function(data) {
+        console.log(data);
+      }
+    });
+  }
+
+  

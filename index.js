@@ -17,17 +17,30 @@ mongoose.connect('mongodb://localhost/todos');
 var todoSchema = mongoose.Schema({
 	date: Date,
 	description: String,
+	done: Boolean
 });
 var Todo = mongoose.model("Todo", todoSchema);
 
 app.get('/', function (req, res) {
-	res.send("Hello world!");
+	res.redirect('/todos');
+});
+
+app.put('/todos/:id/update', function (req, res) {
+	res.send("update todo, id: " + req.params.id);
+});
+
+app.delete('/todos/:id', function (req, res) {
+	res.send("delete todo, id: " + req.params.id);
+});
+
+app.get('/todo-create', function (req, res) {
+	res.render('todo-create');
 });
 
 app.post('/todo-create', function (req, res) {
 	var todoInfo = req.body;
-		
-	if(todoInfo == undefined) {
+
+	if (todoInfo == undefined) {
 		res.render('todo-create', {
 			message: "Please post right info",
 			type: "error"
@@ -42,6 +55,7 @@ app.post('/todo-create', function (req, res) {
 		var newTodo = new Todo({
 			date: todoInfo.date,
 			description: todoInfo.description,
+			done: false
 		});
 
 		newTodo.save(function (err, Todo) {
@@ -51,25 +65,9 @@ app.post('/todo-create', function (req, res) {
 					type: "error"
 				});
 			else
-				res.render('todo-create', {
-					message: "New todo created",
-					type: "success",
-					todo: todoInfo
-				});
+				res.redirect('/todos');
 		});
 	}
-});
-
-app.put('/todos/:id/update', function (req, res) {
-	res.send("update todo, id: " + req.params.id);
-});
-
-app.delete('/todos/:id', function (req, res) {
-	res.send("delete todo, id: " + req.params.id);
-});
-
-app.get('/todo-create', function (req, res) {
-	res.render('todo-create');
 });
 
 app.get('/todos', function (req, res) {
@@ -86,6 +84,86 @@ app.get('/todos', function (req, res) {
 			todos: data
 		});
 	});
+});
+
+app.get('/todos/:id', function(req, res) {
+	var id = req.params.id
+	
+	Todo.findById(id, function(err, response) {
+		var todo = response;
+		todo.human_date = dateFormat(todo.date, "yyyy-mm-dd");
+		res.render('todo-edit', {
+			todo: todo
+		});
+	});
+});
+
+app.post('/todos/:id', function (req, res) {
+	var todoInfo = req.body;
+
+	if (todoInfo == undefined) {
+		res.render('todo-edit', {
+			message: "Please post right info",
+			type: "error"
+		});
+	}
+	else if (!todoInfo.date || !todoInfo.description) {
+		res.render('todo-edit', {
+			message: "Sorry, you provided worng info",
+			type: "error"
+		});
+	} else {
+		var data = {
+			date: todoInfo.date,
+			description: todoInfo.description,
+			done: todoInfo.done
+		};
+
+		Todo.findByIdAndUpdate(req.params.id, data,
+			function (err, response) {
+				if (err) {
+					res.render('todo-edit', {
+						message: "Database error",
+						type: "error",
+						todo: response
+					});
+				}
+				else {
+					res.redirect('/todos');
+				}
+			});
+	}
+});
+
+app.get('/todo-delete/:id', function(req, res) {
+	var id = req.params.id;
+
+	Todo.findByIdAndRemove(id, function(err, response) {
+		if (err) {
+			res.render('todos', {
+				message: "Database error",
+				type: "error"
+			});
+		}
+		else {
+			res.redirect('/todos');
+		}
+	});
+});
+
+app.get('/todo-toggle/:id/:done', function(req, res) {
+	var id = req.params.id;
+	var done = req.params.done;
+
+	Todo.findByIdAndUpdate(req.params.id, {done: done},
+		function (err, response) {
+			if (err) {
+				res.send(JSON.stringify({ type: "error" }));
+			}
+			else {
+				res.send(JSON.stringify({ type: "success" }));
+			}
+		});
 });
 
 app.listen(3000);
