@@ -9,20 +9,18 @@ block content
       table(class="table")
         thead
           tr
-            th(style='text-align: center') #
+            th &nbsp;&nbsp;#
             th Date
             th Task
+            th
         tbody
           each todo in todos
             include todo-item.pug
 
   div(style='text-align: right')
-    button(class='btn btn-danger', style='float: left')
-      i(class='fa fa-trash-o')
-      span  Delete
     a(class='btn btn-primary', href='todo-create')
       i(class='fa fa-plus')
-      span  Todo
+      span  New Todo
 
 block append foot
   script.
