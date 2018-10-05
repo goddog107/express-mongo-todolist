@@ -5,14 +5,14 @@ block content
   hr
   if message
     if type == 'success'
-      p(class='alert alert-info') "#{todo.title}" #{message} 
+      p(class='alert alert-info') "#{todo.date}" #{message} 
     else
       p(class='alert alert-danger') #{message}
 
   form(action = "/todo-create", method = "POST")
     div.form-group
-      label(for = "title") Title
-      input.form-control(name = "title", required)
+      label(for = "date") Date
+      input.form-control(name = "date", required, type='date', style='width: 250px')
     div.form-group
       label(for = "description") Description
       textarea.form-control(name = "description", rows=5, required)

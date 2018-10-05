@@ -3,14 +3,26 @@ extends layout.pug
 block content
   h1 Todo list
   hr
+  
+  if todos.length > 0
+    div.todos-container
+      table(class="table")
+        thead
+          tr
+            th(style='text-align: center') #
+            th Date
+            th Task
+        tbody
+          each todo in todos
+            include todo-item.pug
+
   div(style='text-align: right')
+    button(class='btn btn-danger', style='float: left')
+      i(class='fa fa-trash-o')
+      span  Delete
     a(class='btn btn-primary', href='todo-create')
       i(class='fa fa-plus')
       span  Todo
-  
-  - var todos = ['cat', 'dog']
-  each todo in todos
-    include todo.pug
 
 block append foot
   script.

@@ -1,5 +1,6 @@
 var express = require('express');
 var bodyParser = require('body-parser');
+var dateFormat = require('dateformat');
 var app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -14,7 +15,7 @@ var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/todos');
 
 var todoSchema = mongoose.Schema({
-	title: String,
+	date: Date,
 	description: String,
 });
 var Todo = mongoose.model("Todo", todoSchema);
@@ -32,14 +33,14 @@ app.post('/todo-create', function (req, res) {
 			type: "error"
 		});
 	}
-	else if (!todoInfo.title || !todoInfo.description) {
+	else if (!todoInfo.date || !todoInfo.description) {
 		res.render('todo-create', {
 			message: "Sorry, you provided worng info",
 			type: "error"
 		});
 	} else {
 		var newTodo = new Todo({
-			title: todoInfo.title,
+			date: todoInfo.date,
 			description: todoInfo.description,
 		});
 
@@ -72,7 +73,19 @@ app.get('/todo-create', function (req, res) {
 });
 
 app.get('/todos', function (req, res) {
-	res.render('todo-list');
+	Todo.find({}, function(err, response) {
+		var data = []
+		var todos = response
+		for(let i in todos) {
+			var todo = todos[i];
+			todo.human_date = dateFormat(todo.date, "yyyy-mm-dd");
+			data.push(todo)
+		}
+
+		res.render('todo-list', {
+			todos: data
+		});
+	});
 });
 
 app.listen(3000);
