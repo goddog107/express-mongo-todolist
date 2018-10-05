@@ -1,10 +1,18 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Todo list</title>
-  </head>
+extends layout.pug
+
+block content
+  h1 Todo list
+  hr
+  div(style='text-align: right')
+    a(class='btn btn-primary', href='todo-create')
+      i(class='fa fa-plus')
+      span  Todo
   
-  <body>
-    <p class = "greetings" id = "people">Hello World!</p>
-  </body>
-</html>
+  - var todos = ['cat', 'dog']
+  each todo in todos
+    include todo.pug
+
+block append foot
+  script.
+    console.log('ok')
+    pets = []
