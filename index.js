@@ -52,7 +52,7 @@ app.post('/todo-create', function (req, res) {
 				});
 			else
 				res.render('todo-create', {
-					message: "added",
+					message: "New todo created",
 					type: "success",
 					todo: todoInfo
 				});

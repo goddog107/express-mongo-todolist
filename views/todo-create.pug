@@ -5,7 +5,7 @@ block content
   hr
   if message
     if type == 'success'
-      p(class='alert alert-info') "#{todo.date}" #{message} 
+      p(class='alert alert-info') "#{todo.description}" created successfully! 
     else
       p(class='alert alert-danger') #{message}
 
